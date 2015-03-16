@@ -25,7 +25,7 @@ public class Matrix {
                     pivot++;
                 }
                 reductions.push(genElementarySwapMatrix(j, pivot, upper.matrix[j].length));
-                upper = LinearAlgebra.multMatrices(reduction.peek(), upper);
+                upper = LinearAlgebra.multMatrices(reductions.peek(), upper);
                 pivot = j;
             }
             for (int i = 1; i < upper.matrix.length; i++) {
@@ -34,7 +34,7 @@ public class Matrix {
                                 -1 * upper.matrix[i][j] / upper.matrix[pivot][j],
                                 i,
                                 upper.matrix.length));
-                    upper = LinearAlgebra.multMatrices(reduction.peek(), upper);
+                    upper = LinearAlgebra.multMatrices(reductions.peek(), upper);
                 }
             }
         }
@@ -46,19 +46,19 @@ public class Matrix {
     }
 
     public Matrix[] QRFactorize() {
-
+        return new Matrix[]{this, this};
     }
 
     public double getDeterminant() {
-
+        return 0;
     }
 
     public double[] getEigenvalues() {
-
+        return null;
     }
 
     public double[] getEigenvectors() {
-
+        return null;
     }
 
     public Matrix getTranspose() {
@@ -90,7 +90,7 @@ public class Matrix {
     }
 
     public int[] getSize() {
-        return new int[]{ matrix.length, matrix[0].length; }
+        return new int[]{ matrix.length, matrix[0].length};
     }
 
     public static Matrix genElementarySwapMatrix(int row1, int row2, int size) {
