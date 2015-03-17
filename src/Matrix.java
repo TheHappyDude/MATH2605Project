@@ -10,11 +10,19 @@ import java.util.ArrayDeque;
 public class Matrix {
 
     private double[][] matrix;
+    private int numRows;
+    private int numCols;
 
     public Matrix(double[][] matrix) {
         this.matrix = matrix;
+        numRows = matrix.length;
+        numCols = matrix[0].length;
     }
 
+    /**
+     * Does an LU factorization of the matrix
+     * @return matrices of the L and U components
+     */
     public Matrix[] LUFactorize() {
         Deque<Matrix> reductions = new ArrayDeque<>();
         Matrix upper = this;
@@ -45,22 +53,69 @@ public class Matrix {
         return new Matrix[]{lower, upper};
     }
 
+    //TODO
     public Matrix[] QRFactorize() {
         return new Matrix[]{this, this};
     }
 
+    /**
+     * Returns the determinant of the matrix
+     * @return the determinant
+     */
     public double getDeterminant() {
-        return 0;
+        if (numRows != numCols) {
+            throw new IllegalArgumentException("Cannot find determinant of nonsquare matrix");
+        }
+        return determinantRecurse(matrix);
     }
 
+    /**
+     * Helper recursive method for getDeterminant
+     * @param matrix being expanded
+     * @return the determinant
+     */
+    public double determinantRecurse(double[][] matrix) {
+        int determinant = 0;
+        int sign = 1;
+
+        if (numRows == 1) {     //Base case
+            return matrix[0][0];
+        }
+        for (int c = 0; c < numRows; c++) {
+            double[][] array = new double[numRows - 1][numCols - 1];    //Cofactor expansion
+            for (int a = 1; a < numRows; a++) {
+                for (int b = 0; b < numCols; b++) {
+                    if (b < c) {
+                        array[a - 1][b] = matrix[a][b];
+                    } else if (b > c) {
+                        array[a - 1][b - 1] = matrix[a][b];
+                    }
+                }
+            }
+            if (c % 2 == 0) {   //Flip signs
+                sign = 1;
+            } else {
+                sign = -1;
+            }
+            determinant += sign * matrix[0][c] * (getDeterminant(array));
+        }
+        return determinant;
+    }
+
+    //TODO
     public double[] getEigenvalues() {
         return null;
     }
 
+    //TODO
     public double[] getEigenvectors() {
         return null;
     }
 
+    /**
+     * Returns the transpose of the matrix
+     * @return The transpose of the matrix
+     */
     public Matrix getTranspose() {
         double[][] transpose = new double[matrix[0].length][matrix.length];
         for (int i = 0; i < matrix.length; i++) {
