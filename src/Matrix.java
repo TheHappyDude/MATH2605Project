@@ -126,7 +126,12 @@ public class Matrix {
         return new Matrix(transpose);
     }
 
-    //row i, column j
+    /**
+     * Returns the element at location (i, j)
+     * @param i the row of the element
+     * @param j the column of the element
+     * @return the element at that location in the matrix
+     */
     public double get(int i, int j) {
         if (i < 0 || i > matrix.length || j < 0 || j > matrix[0].length) {
             throw new IndexOutOfBoundsException();
@@ -134,6 +139,11 @@ public class Matrix {
         return matrix[i][j];
     }
 
+    /**
+     * Multiplies the matrix by a scalar
+     * @param c1 the scalar
+     * @return the new matrix scaled
+     */
     public Matrix scale(double c1) {
         double[][] scaled = new double[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {
@@ -144,8 +154,12 @@ public class Matrix {
         return new Matrix(scaled);
     }
 
+    /**
+     * Returns the dimensions of the array
+     * @return int array of the dimensions [rows, cols]
+     */
     public int[] getSize() {
-        return new int[]{ matrix.length, matrix[0].length};
+        return new int[]{ numRows, numCols};
     }
 
     public static Matrix genElementarySwapMatrix(int row1, int row2, int size) {
@@ -178,6 +192,11 @@ public class Matrix {
         return new Matrix(addMatrix);
     }
 
+    /**
+     * Generates a square identity matrix of the given size
+     * @param size of the array
+     * @return the identity matrix
+     */
     public static Matrix genIdentityMatrix(int size) {
         double[][] identity = new double[size][size];
         for (int i = 0; i < size; i++) {
