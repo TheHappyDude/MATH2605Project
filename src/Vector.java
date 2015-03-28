@@ -58,4 +58,12 @@ public class Vector {
         }
         return Math.sqrt(norm);
     }
+
+    public String toString() {
+        String out = "";
+        for (double elem : vector) {
+            out += "[ " + elem + " ]\n";
+        }
+        return out;
+    }
 }
