@@ -15,7 +15,7 @@ public class Vector {
     public Matrix getTranspose() {
         double[][] transpose = new double[1][vector.length];
         for (int i = 0; i < vector.length; i++) {
-            transpose[1][i] = vector[i];
+            transpose[0][i] = vector[i];
         }
         return new Matrix(transpose);
     }
@@ -49,5 +49,13 @@ public class Vector {
             scaled[i] = vector[i] * c1;
         }
         return new Vector(scaled);
+    }
+
+    public double getNorm() {
+        double norm = 0;
+        for (double elem : vector) {
+            norm += elem * elem;
+        }
+        return Math.sqrt(norm);
     }
 }
