@@ -98,14 +98,59 @@ public class Matrix {
         }
 
         for (int i = reflections.length - 1; i > -1; i--) {
-            q = LinearAlgebra.multMatrices(reflections[i], q);
+            q = LinearAlgebra.multMatrices(reflections[i].getTranspose(), q);
         }
 
         return new Matrix[]{q, r};
     }
 
     public Matrix[] QRFactorizeGR() {
-        return null;
+        Matrix q = Matrix.genIdentityMatrix(matrix.length);
+        Matrix r = new Matrix(matrix);
+        Matrix[] rotations = new Matrix[matrix.length * (matrix.length - 1) / 2];
+        int count = 0;
+
+        for (int col = 0; col < r.matrix.length; col++) {
+            for (int i = col + 1; i < r.matrix[0].length; i++) {
+                if (r.get(i, col) != 0) {
+                    Vector target = new Vector(new double[]{r.get(col, col), r.get(i, col)});
+
+                    double cos = target.get(0) / Math.sqrt(target.get(0) * target.get(0) + target.get(1) * target.get(1));
+                    double sin = -1 * target.get(1) / Math.sqrt(target.get(0) * target.get(0) + target.get(1) * target.get(1));
+                    double[][] rotationArr = new double[matrix.length][matrix
+                            .length];
+                    for (int j = 0; j < matrix.length; j++) {
+                        for (int k = 0; k < matrix[0].length; k++) {
+                            if (j == col && k == col) {
+                                rotationArr[j][k] = cos;
+                            } else if (j == col && k == i) {
+                                rotationArr[j][k] = -1 * sin;
+                            } else if (j == i && k == col) {
+                                rotationArr[j][k] = sin;
+                            } else if (j == i && k == i) {
+                                rotationArr[j][k] = cos;
+                            } else if (j == k) {
+                                rotationArr[j][k] = 1;
+                            } else {
+                                rotationArr[j][k] = 0;
+                            }
+                        }
+                    }
+                    Matrix rotation = new Matrix(rotationArr);
+                    r = LinearAlgebra.multMatrices(rotation, r);
+                    rotations[count] = rotation;
+                    count++;
+                }
+            }
+        }
+
+        for (int i = rotations.length - 1; i > -1; i--) {
+            if (rotations[i] != null) {
+                q = LinearAlgebra.multMatrices(rotations[i].getTranspose(), q);
+            }
+        }
+
+        return new Matrix[]{q, r};
     }
 
     /**
