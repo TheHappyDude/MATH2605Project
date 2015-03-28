@@ -25,8 +25,8 @@ public class Matrix {
      */
     public Matrix[] LUFactorize() {
         Deque<Matrix> reductions = new ArrayDeque<>();
-        Matrix upper = this;
-        for (int j = 0; j < upper.matrix[j].length - 1 && j < upper.matrix.length; j++) {
+        Matrix upper = new Matrix(matrix);
+        for (int j = 0; j < upper.matrix.length - 1; j++) {
             int pivot = j;
             if (upper.matrix[j][j] == 0) {
                 while (pivot < upper.matrix.length && upper.matrix[pivot][j] == 0) {
@@ -36,14 +36,15 @@ public class Matrix {
                 upper = LinearAlgebra.multMatrices(reductions.peek(), upper);
                 pivot = j;
             }
-            for (int i = 1; i < upper.matrix.length; i++) {
-                if (upper.matrix[i][j] != 0) {
+            for (int i = j + 1; i < upper.matrix.length; i++) {
                     reductions.push(genElementaryAddMatrix(pivot,
-                                -1 * upper.matrix[i][j] / upper.matrix[pivot][j],
-                                i,
-                                upper.matrix.length));
-                    upper = LinearAlgebra.multMatrices(reductions.peek(), upper);
-                }
+                            upper.matrix[i][j] / upper
+                                    .matrix[pivot][j], i, upper.matrix
+                                    .length));
+                upper = LinearAlgebra.multMatrices(genElementaryAddMatrix(pivot,
+                            -1 * upper.matrix[i][j] / upper.matrix[pivot][j],
+                            i,
+                            upper.matrix.length), upper);
             }
         }
         Matrix lower = genIdentityMatrix(matrix.length);
@@ -180,7 +181,7 @@ public class Matrix {
         double[][] addMatrix = new double[size][size];
         for (int i = 0; i < addMatrix.length; i++) {
             for (int j = 0; j < addMatrix[0].length; j++) {
-                if (j == row2 && i == row1) {
+                if (i == row2 && j == row1) {
                     addMatrix[i][j] = c1;
                 } else if (i == j) {
                     addMatrix[i][j] = 1;
@@ -212,8 +213,9 @@ public class Matrix {
     }
 
     public String toString() {
-        String out = "[ ";
+        String out = "";
         for (double[] row : matrix) {
+            out += "[ ";
             for (double elem : row) {
                 out += " " + elem + " ";
             }
