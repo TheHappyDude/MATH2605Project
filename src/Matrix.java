@@ -97,7 +97,7 @@ public class Matrix {
             } else {
                 sign = -1;
             }
-            determinant += sign * matrix[0][c] * (getDeterminant(array));
+            determinant += sign * matrix[0][c] * determinantRecurse(array);
         }
         return determinant;
     }
