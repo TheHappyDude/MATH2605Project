@@ -45,11 +45,25 @@ public final class LinearAlgebra {
         }
 
         double[][] product = new double[m1.getSize()[0]][m2.getSize()[1]];
-        for (int i = 0; i < m1.getSize()[0]; i++) {
-            for (int j = 0; j < m2.getSize()[1]; j++) {
+        for (int i = 0; i < product.length; i++) {
+            for (int j = 0; j < product[0].length; j++) {
                 for (int k = 0; k < m1.getSize()[1]; k++) {
                     product[i][j] += m1.get(i,k) * m2.get(k,j);
                 }
+            }
+        }
+        return new Matrix(product);
+    }
+
+    public static Matrix multVectorMatrix(Vector v1, Matrix m1) {
+        if (m1.getSize()[1] != v1.getSize()) {
+            throw new IllegalArgumentException("Matrix and Vector must be of valid size");
+        }
+
+        double[][] product = new double[v1.getSize()][v1.getSize()];
+        for (int i = 0; i < product.length; i++) {
+            for (int j = 0; j < product[i].length; j++) {
+                product[i][j] = v1.get(i) * m1.get(0,j);
             }
         }
         return new Matrix(product);
