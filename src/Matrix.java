@@ -54,9 +54,58 @@ public class Matrix {
         return new Matrix[]{lower, upper};
     }
 
-    //TODO
-    public Matrix[] QRFactorize() {
-        return new Matrix[]{this, this};
+    public Matrix[] QRFactorizeHH() {
+        Matrix q = Matrix.genIdentityMatrix(matrix.length);
+        Matrix r = new Matrix(matrix);
+        Matrix[] reflections = new Matrix[matrix.length - 1];
+
+        for (int col = 0; col < matrix.length - 1; col++) {
+            double[] target = new double[r.matrix.length - col];
+            for (int row = col; row < r.matrix.length; row++) {
+                target[row - col] = r.matrix[row][col];
+            }
+            Vector targetV = new Vector(target);
+            double[] e1Arr = new double[target.length];
+            e1Arr[0] = 1;
+            Vector e1 = new Vector(e1Arr);
+            Vector v = LinearAlgebra.add(targetV, e1.scale(-1 * targetV.getNorm()));
+            Vector u = v.scale(1 / v.getNorm());
+            Matrix h = LinearAlgebra.add(Matrix.genIdentityMatrix(target.length),
+                    LinearAlgebra.multVectorMatrix(u,u.getTranspose()).scale(-2));
+            double[][] wrappedHArr = new double[matrix.length][matrix.length];
+            int difference = wrappedHArr.length - h.getSize()[0];
+            if (difference > 0) {
+                for (int j = 0; j < wrappedHArr.length; j++) {
+                    for (int k = 0; k < wrappedHArr[j].length; k++) {
+                        if (j < difference || k < difference) {
+                            if (j == k) {
+                                wrappedHArr[j][k] = 1;
+                            } else {
+                                wrappedHArr[j][k] = 0;
+                            }
+                        } else {
+                            wrappedHArr[j][k] = h.matrix[j - difference][k - difference];
+                        }
+                    }
+                }
+            } else {
+                wrappedHArr = h.matrix;
+            }
+            Matrix wrappedH = new Matrix(wrappedHArr);
+            r = LinearAlgebra.multMatrices(wrappedH, r);
+
+            reflections[col] = wrappedH;
+        }
+
+        for (int i = reflections.length - 1; i > -1; i--) {
+            q = LinearAlgebra.multMatrices(reflections[i], q);
+        }
+
+        return new Matrix[]{q, r};
+    }
+
+    public Matrix[] QRFactorizeGR() {
+        return null;
     }
 
     /**
@@ -134,8 +183,8 @@ public class Matrix {
      * @return the element at that location in the matrix
      */
     public double get(int i, int j) {
-        if (i < 0 || i > matrix.length || j < 0 || j > matrix[0].length) {
-            throw new IndexOutOfBoundsException();
+        if (i < 0 || i >= matrix.length || j < 0 || j >= matrix[0].length) {
+            throw new IndexOutOfBoundsException("i:" + i + " j:" + j);
         }
         return matrix[i][j];
     }
