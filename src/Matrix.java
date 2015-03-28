@@ -136,4 +136,15 @@ public class Matrix {
         }
         return new Matrix(identity);
     }
+
+    public String toString() {
+        String out = "[ ";
+        for (double[] row : matrix) {
+            for (double elem : row) {
+                out += " " + elem + " ";
+            }
+            out +="]\n";
+        }
+        return out;
+    }
 }
