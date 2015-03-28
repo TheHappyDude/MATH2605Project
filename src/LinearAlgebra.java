@@ -1,14 +1,14 @@
 public final class LinearAlgebra {
-    public static Vector dot(Vector v1,Vector v2) {
+    public static double dot(Vector v1,Vector v2) {
         if (v1.getSize() != v2.getSize()) {
             throw new IllegalArgumentException("Vectors must be of same size");
         }
 
-        double[] dot = new double[v1.getSize()];
+        double dot = 0;
         for (int i = 0; i < v1.getSize(); i++) {
-            dot += v1.get(i) + v2.get(i);
+            dot += v1.get(i) * v2.get(i);
         }
-        return new Vector(dot);
+        return dot;
     }
 
 
@@ -32,10 +32,10 @@ public final class LinearAlgebra {
         double[] product = new double[m1.getSize()[0]];
         for (int i = 0; i < m1.getSize()[0]; i++) {
             for (int j = 0; j < m1.getSize()[1]; j++) {
-                product[i][0] += m1.get(i,j) * v1.get(j);
+                product[i] += m1.get(i,j) * v1.get(j);
             }
         }
-        return new Matrix(product);
+        return new Vector(product);
 
     }
 
