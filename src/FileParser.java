@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 // Reads an ASCII file and converts to a Matrix object
 public class FileParser {
     BufferedReader in;
-    
+
     public FileParser(String filename) {
         try {
             in = new BufferedReader(new FileReader(filename));
@@ -17,22 +17,24 @@ public class FileParser {
 
     public Matrix getMatrix() throws java.io.IOException {
         double[][] matrix;
+        in.mark(500000);
         String nextLine = in.readLine();
         StringTokenizer tokens = new StringTokenizer(nextLine);
         int size = tokens.countTokens();
+        in.reset();
         matrix = new double[size][size];
         int row = 0;
         int col = 0;
-        do {
+        while (in.ready()) {
+            nextLine = in.readLine();
+            tokens = new StringTokenizer(nextLine);
             while (tokens.hasMoreTokens()) {
                 matrix[row][col] = Double.parseDouble(tokens.nextToken());
                 col++;
             }
-            nextLine = in.readLine();
-            tokens = new StringTokenizer(nextLine);
             col = 0;
             row++;
-        } while (in.ready());
+        }
         return new Matrix(matrix);
     }
 
