@@ -82,4 +82,29 @@ public final class LinearAlgebra {
         }
         return new Matrix(sum);
     }
+
+    public static Vector solveWithLU(Matrix a, Vector b) {
+        double[] x = new double[a.getSize()[0]];
+        double[] y = new double[x.length];
+        Matrix[] lu = a.LUFactorize();
+        Matrix l = lu[0];
+        Matrix u = lu[1];
+
+        for (int i = 0; i < y.length; i++) {
+            double sub = 0;
+            for (int j = 0; j < i; j++) {
+                sub += l.get(i, j) * y[j];
+            }
+            y[i] = (b.get(i) - sub) / l.get(i, i);
+        }
+        for (int i = x.length - 1; i > -1; i--) {
+            double sub = 0;
+            for (int j = i + 1; j < x.length; j++) {
+                sub += u.get(i,j) * x[j];
+            }
+            x[i] = (y[i] - sub) / u.get(i,i);
+        }
+
+        return new Vector(x);
+    }
 }
