@@ -152,7 +152,7 @@ public class Driver {
             oldValue = eigenvalue;
             eigenvector = LinearAlgebra.multMatrixVector(a, eigenvector);
             eigenvector.scale(1 / eigenvalue.getNorm());
-            eigenvalue = eigenvalue.getNorm();
+            eigenvalue = eigenvector.getNorm();
             numIterations++;
         }
 
