@@ -128,4 +128,13 @@ public class Driver {
                 multMatrixVector(a, x), b.scale(-1)).getMaxNorm();
         System.out.println("Error of AX-b: " + errorX);
     }
+
+    private static void jacobi() throws java.io.IOException {
+        System.out.println("Input stream filename: ");
+        FileParser aFile = new FileParser(in.nextLine());
+        Vector stream = aFile.getVector();
+        System.out.println("Stream: " + stream);
+        Vector encodedStream = LinearAlgebra.encodeConvoluted(stream);
+        System.out.println("Encoded stream: " + encodedStream);
+    }
 }

@@ -132,4 +132,29 @@ public final class LinearAlgebra {
         }
         return new Vector(x);
     }
+
+    public static Vector encodeConvoluted(Vector stream) {
+        double[][] matrix = new double[stream.getSize()][stream.getSize()];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = matrix.length; j > i; j--) {
+                matrix[i][j] = 0;
+            }
+            for (int c = i; c >= 0; c++) {
+                if (c == i || c == i-2 || c == i - 3) {
+                    matrix[i][c] = 1;
+                } else {
+                    matrix[i][c] = 0;
+                }
+            }
+        }
+        Matrix a0 = new Matrix(matrix);
+        System.out.println(a0);
+        return null;
+    }
+
+    public static void main(String[] args) {
+        double[] array = {1,0,1,0};
+        Vector stream = new Vector(array);
+        encodeConvoluted(stream);
+    }
 }
