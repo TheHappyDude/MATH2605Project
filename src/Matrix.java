@@ -28,14 +28,6 @@ public class Matrix {
         Matrix upper = new Matrix(matrix);
         for (int j = 0; j < upper.matrix.length - 1; j++) {
             int pivot = j;
-            if (upper.matrix[j][j] == 0) {
-                while (pivot < upper.matrix.length && upper.matrix[pivot][j] == 0) {
-                    pivot++;
-                }
-                reductions.push(genElementarySwapMatrix(j, pivot, upper.matrix[j].length));
-                upper = LinearAlgebra.multMatrices(reductions.peek(), upper);
-                pivot = j;
-            }
             for (int i = j + 1; i < upper.matrix.length; i++) {
                     reductions.push(genElementaryAddMatrix(pivot,
                             upper.matrix[i][j] / upper
@@ -316,5 +308,17 @@ public class Matrix {
             out +="]\n";
         }
         return out;
+    }
+
+    public double getMaxNorm() {
+        double max = Math.abs(matrix[0][0]);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (max < Math.abs(matrix[i][j])) {
+                    max = Math.abs(matrix[i][j]);
+                }
+            }
+        }
+        return max;
     }
 }

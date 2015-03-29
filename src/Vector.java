@@ -65,4 +65,14 @@ public class Vector {
         }
         return out;
     }
+
+    public double getMaxNorm() {
+        double max = Math.abs(vector[0]);
+        for (int i = 0; i < vector.length; i++) {
+            if (max < Math.abs(vector[i])) {
+                max = Math.abs(vector[i]);
+            }
+        }
+        return max;
+    }
 }
