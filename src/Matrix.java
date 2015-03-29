@@ -351,30 +351,4 @@ public class Matrix {
     public int getNumRows() {
         return numRows;
     }
-
-    public Matrix subtract(Matrix m) {
-        if (numCols == m.getNumCols() && numRows == m.getNumRows()) {
-            for (int r = 0; r < numRows; r++) {
-                for (int c = 0; c < numCols; c++) {
-                    matrix[r][c] -= m[r][c];
-                }
-            }
-            return matrix;
-        } else {
-            throw new IllegalArgumentException("Mismatched dimensions!");
-        }
-    }
-
-    public Matrix add(Matrix m) {
-        if (numCols == m.getNumCols() && numRows == m.getNumRows()) {
-            for (int r = 0; r < numRows; r++) {
-                for (int c = 0; c < numCols; c++) {
-                    matrix[r][c] += m[r][c];
-                }
-            }
-            return matrix;
-        } else {
-            throw new IllegalArgumentException("Mismatched dimensions!");
-        }
-    }
 }
