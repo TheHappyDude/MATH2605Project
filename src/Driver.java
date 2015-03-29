@@ -325,15 +325,15 @@ public class Driver {
         Vector uo = uoFile.getVector();
 
         //Calculations
-        Double eigenvalue = 0
-        Double oldValue = Integer.MAX;
+        Double eigenvalue = 0.0;
+        Double oldValue = tol + 1;
         Vector eigenvector = uo;
         int numIterations = 0;
 
         while (Math.abs(eigenvalue - oldValue) > tol && numIterations < 100) {
             oldValue = eigenvalue;
             eigenvector = LinearAlgebra.multMatrixVector(a, eigenvector);
-            eigenvector.scale(1 / eigenvalue.getNorm());
+            eigenvector.scale(1 / eigenvector.getNorm());
             eigenvalue = eigenvector.getNorm();
             numIterations++;
         }
@@ -341,7 +341,7 @@ public class Driver {
         //Output
         if (numIterations < 100) {
             System.out.println("Approximated eigenvalue: " + eigenvalue + "\n");
-            System.out.println("Approximated eigenvector: " + eigenvector.toString() + "\n")
+            System.out.println("Approximated eigenvector: " + eigenvector.toString() + "\n");
             System.out.println("Number of iterations: " + numIterations);
         } else {
             System.out.println("Method does not converge after 100 iterations");
