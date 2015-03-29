@@ -1,5 +1,7 @@
 import java.util.Deque;
 import java.util.ArrayDeque;
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 // Matrix.java
 // Note: Matrices entered in row major order
@@ -300,10 +302,24 @@ public class Matrix {
 
     public String toString() {
         String out = "";
+        BigDecimal bd;
         for (double[] row : matrix) {
             out += "[ ";
             for (double elem : row) {
-                out += " " + elem + " ";
+                out += " " + String.format("%9f", elem) + " ";
+            }
+            out +="]\n";
+        }
+        return out;
+    }
+
+    public String toStringFull() {
+        String out = "";
+        for (double[] row : matrix) {
+            out += "[ ";
+            for (double elem : row) {
+                String num = "" + elem;
+                out += " " + String.format("%21s", num) + " ";
             }
             out +="]\n";
         }
@@ -320,5 +336,15 @@ public class Matrix {
             }
         }
         return max;
+    }
+
+    public static Matrix genHilbertMatrix(int size) {
+        double[][] hilbert = new double[size][size];
+        for (int i = 0; i < hilbert.length; i++) {
+            for (int j = 0; j < hilbert[i].length; j++) {
+                hilbert[i][j] = 1.0 / (i + j + 1);
+            }
+        }
+        return new Matrix(hilbert);
     }
 }
