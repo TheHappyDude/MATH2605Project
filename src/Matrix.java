@@ -1,7 +1,5 @@
 import java.util.Deque;
 import java.util.ArrayDeque;
-import java.math.BigDecimal;
-import java.math.MathContext;
 
 // Matrix.java
 // Note: Matrices entered in row major order
@@ -181,9 +179,7 @@ public class Matrix {
                     }
                 }
             }
-            if (c % 2 == 0) {   //Flip signs
-                sign = 1;
-            } else {
+            if (c % 2 != 0) {   //Flip signs
                 sign = -1;
             }
             determinant += sign * matrix[0][c] * determinantRecurse(array);
@@ -229,7 +225,8 @@ public class Matrix {
     }
 
     /**
-     * Multiplies the matrix by a scalar
+     * Multiplies the matrix by a scalar. Does not change the values of this
+     * Matrix instance, instead returns a new Matrix.
      * @param c1 the scalar
      * @return the new matrix scaled
      */
@@ -302,7 +299,6 @@ public class Matrix {
 
     public String toString() {
         String out = "";
-        BigDecimal bd;
         for (double[] row : matrix) {
             out += "[ ";
             for (double elem : row) {
@@ -346,5 +342,39 @@ public class Matrix {
             }
         }
         return new Matrix(hilbert);
+    }
+
+    public int getNumCols() {
+        return numCols;
+    }
+
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public Matrix subtract(Matrix m) {
+        if (numCols == m.getNumCols() && numRows == m.getNumRows()) {
+            for (int r = 0; r < numRows; r++) {
+                for (int c = 0; c < numCols; c++) {
+                    matrix[r][c] -= m[r][c];
+                }
+            }
+            return matrix;
+        } else {
+            throw new IllegalArgumentException("Mismatched dimensions!");
+        }
+    }
+
+    public Matrix add(Matrix m) {
+        if (numCols == m.getNumCols() && numRows == m.getNumRows()) {
+            for (int r = 0; r < numRows; r++) {
+                for (int c = 0; c < numCols; c++) {
+                    matrix[r][c] += m[r][c];
+                }
+            }
+            return matrix;
+        } else {
+            throw new IllegalArgumentException("Mismatched dimensions!");
+        }
     }
 }
