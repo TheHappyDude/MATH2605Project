@@ -54,6 +54,7 @@ public class Matrix {
         return new Matrix[]{lower, upper};
     }
 
+
     public Matrix[] QRFactorizeHH() {
         Matrix q = Matrix.genIdentityMatrix(matrix.length);
         Matrix r = new Matrix(matrix);
@@ -187,9 +188,7 @@ public class Matrix {
                     }
                 }
             }
-            if (c % 2 == 0) {   //Flip signs
-                sign = 1;
-            } else {
+            if (c % 2 != 0) {   //Flip signs
                 sign = -1;
             }
             determinant += sign * matrix[0][c] * determinantRecurse(array);
@@ -235,7 +234,8 @@ public class Matrix {
     }
 
     /**
-     * Multiplies the matrix by a scalar
+     * Multiplies the matrix by a scalar. Does not change the values of this
+     * Matrix instance, instead returns a new Matrix.
      * @param c1 the scalar
      * @return the new matrix scaled
      */
