@@ -351,4 +351,31 @@ public class Matrix {
     public int getNumRows() {
         return numRows;
     }
+
+    public Matrix[] getLDUDecomposition() {
+        double[][][] LDU = new double[3][matrix.length][matrix.length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                if (j == i) {
+                    LDU[1][i][j] = matrix[i][j];
+                    LDU[0][i][j] = 0;
+                    LDU[2][i][j] = 0;
+                } else if (j < i) {
+                    LDU[0][i][j] = matrix[i][j];
+                    LDU[1][i][j] = 0;
+                    LDU[2][i][j] = 0;
+                } else {
+                    LDU[2][i][j] = matrix[i][j];
+                    LDU[0][i][j] = 0;
+                    LDU[1][i][j] = 0;
+                }
+            }
+        }
+
+        Matrix[] LDUMatrix = new Matrix[3];
+        for (int i = 0; i < LDUMatrix.length; i++) {
+            LDUMatrix[i] = new Matrix(LDU[i]);
+        }
+        return LDUMatrix;
+    }
 }
