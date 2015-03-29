@@ -38,8 +38,8 @@ public class Driver {
             solve_qr_b();
         } else if (command.equals("solve_hilbert")) {
             solve_hilbert();
-        } else if (command.equals("solve_hilbert_csv")) {
-            solve_hilbert_csv();
+        } else if (command.equals("power_method")) {
+            power_method();
         }
     }
 
