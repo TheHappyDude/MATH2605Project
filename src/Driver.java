@@ -128,4 +128,42 @@ public class Driver {
                 multMatrixVector(a, x), b.scale(-1)).getMaxNorm();
         System.out.println("Error of AX-b: " + errorX);
     }
+    
+    //PART III
+    private static void power_method() throws java.io.IOException {
+        //Inputs
+        System.out.print("Input matrix A filename: ");
+        FileParser aFile = new FileParser(in.nextLine());
+        Matrix a = aFile.getMatrix();
+        System.out.print("Input error tolerance: ");
+        Double tol;
+        tol = in.nextDouble();
+        System.out.print("Input initial approximation vector filename: ");
+        FileParser uoFile = new FileParser(in.nextLine());
+        Vector uo = uoFile.getVector();
+
+        //Calculations
+        Double eigenvalue = 0
+        Double oldValue = Integer.MAX;
+        Vector eigenvector = uo;
+        int numIterations = 0;
+
+        while (Math.abs(eigenvalue - oldValue) > tol && numIterations < 100) {
+            oldValue = eigenvalue;
+            eigenvector = LinearAlgebra.multMatrixVector(a, eigenvector);
+            eigenvector.scale(1 / eigenvalue.getNorm());
+            eigenvalue = eigenvalue.getNorm();
+            numIterations++;
+        }
+
+        //Output
+        if (numIterations < 100) {
+            System.out.println("Approximated eigenvalue: " + eigenvalue + "\n");
+            System.out.println("Approximated eigenvector: " + eigenvector.toString() + "\n")
+            System.out.println("Number of iterations: " + numIterations);
+        } else {
+            System.out.println("Method does not converge after 100 iterations");
+        }
+
+    }
 }
