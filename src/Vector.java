@@ -14,9 +14,7 @@ public class Vector {
      */
     public Matrix getTranspose() {
         double[][] transpose = new double[1][vector.length];
-        for (int i = 0; i < vector.length; i++) {
-            transpose[0][i] = vector[i];
-        }
+        transpose[0] = vector;
         return new Matrix(transpose);
     }
 
@@ -39,7 +37,8 @@ public class Vector {
     public int getSize() { return vector.length; }
 
     /**
-     * Multiplies the vector by a scalar
+     * Multiplies the vector by a scalar. Does not change the values of this
+     * Vector instance, instead returns a new, scaled copy of this Vector.
      * @param c1 the scalar
      * @return the new vector scaled
      */
