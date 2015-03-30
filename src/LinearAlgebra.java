@@ -185,4 +185,49 @@ public final class LinearAlgebra {
         } while (iterations < MAX_ITERATIONS);
         return null;
     }
+
+    public static Vector modulo2multMatrixVector(Matrix m, Vector v) {
+        if (m.getSize()[1] != v.getSize()) {
+            throw new IllegalArgumentException("Matrix and Vector must be of valid size");
+        }
+
+        double[] product = new double[m.getSize()[0]];
+        for (int i = 0; i < m.getSize()[0]; i++) {
+            for (int j = 0; j < m.getSize()[1]; j++) {
+                product[i] += m.get(i,j) * v.get(j);
+            }
+            product[i] = product[i] % 2;
+        }
+        return new Vector(product);
+    }
+
+    public static Vector encodeConvoluted(Vector stream) {
+        double[][] m = new double[stream.getSize()][stream.getSize()];
+        //build matrices a1, a2 for finding y1 and y2
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m.length; j++) {
+                if (j == i || j == i - 2 || j == i - 3) {
+                    m[i][j] = 1;
+                } else {
+                    m[i][j] = 0;
+                }
+            }
+        }
+        Matrix a0 = new Matrix(m);
+        double[][] n = new double[stream.getSize()][stream.getSize()];
+        for (int i = 0; i < n.length; i++) {
+            for (int j = 0; j < n.length; j++) {
+                if (j == i || j == i - 1 || j == i - 3) {
+                    n[i][j] = 1;
+                } else {
+                    n[i][j] = 0;
+                }
+            }
+        }
+        Matrix a1 = new Matrix(n);
+
+        Vector y0 = modulo2multMatrixVector(a0, stream);
+        Vector y1 = modulo2multMatrixVector(a1, stream);
+        return LinearAlgebra.add(y0.scale(10), y1);
+    }
 }
