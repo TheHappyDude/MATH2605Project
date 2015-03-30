@@ -132,4 +132,57 @@ public final class LinearAlgebra {
         }
         return new Vector(x);
     }
+
+    public static Object[] solveWithJacobi(Matrix a, Vector y, Vector x0, double tol) {
+        final int MAX_ITERATIONS = 100000;
+        Vector xPrev = x0;
+        Vector x;
+        int iterations = 0;
+
+        do {
+            double[] xArr = new double[xPrev.getSize()];
+            for (int i = 0; i < xArr.length; i++) {
+                for (int j = 0; j < a.getSize()[1]; j++) {
+                    if (i != j) {
+                        xArr[i] += a.get(i,j) * xPrev.get(j);
+                    }
+                }
+                xArr[i] = -1* xArr[i] / a.get(i,i) + y.get(i);
+            }
+            x = new Vector(xArr);
+            iterations++;
+            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() > tol) {
+                return new Object[]{x, 0};
+            }
+        } while (iterations < MAX_ITERATIONS);
+        return null;
+    }
+
+    public static Object[] solveWithGaussSeidel(Matrix a, Vector y, Vector x0, double tol) {
+        final int MAX_ITERATIONS = 100000;
+        Vector xPrev = x0;
+        Vector x;
+        int iterations = 0;
+
+        do {
+            double[] xArr = new double[xPrev.getSize()];
+            for (int i = 0; i < xArr.length; i++) {
+                for (int j = 0; j < a.getSize()[1]; j++) {
+                    if (j < i) {
+                        xArr[i] += a.get(i,j) * xPrev.get(j);
+                    } else if (j > i) {
+                        xArr[i] += a.get(i,j) * xArr[j];
+                    }
+                }
+                xArr[i] = -1* xArr[i] / a.get(i,i) + y.get(i);
+            }
+            x = new Vector(xArr);
+            iterations++;
+            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() > tol) {
+                return new Object[]{x, 0};
+            }
+            xPrev = x;
+        } while (iterations < MAX_ITERATIONS);
+        return null;
+    }
 }
