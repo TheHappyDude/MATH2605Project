@@ -1,5 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -324,6 +325,20 @@ public class Driver {
 
     private static  void gauss_seidel() {
 
+    }
+
+    private static void encode_random_stream() {
+        System.out.print("Input stream length: ");
+        int n = Integer.parseInt(in.nextLine());
+        Random rand = new Random();
+        double[] xArr = new double[n];
+        for (int i = 0; i < n; i++) {
+            xArr[i] = rand.nextInt(2);
+        }
+        Vector x = new Vector(xArr);
+        System.out.println("x:\n" + x);
+        Vector encodedStream = LinearAlgebra.encodeConvoluted(x);
+        System.out.println("Encoded stream: \n" + encodedStream);
     }
 
     //PART III
