@@ -83,12 +83,11 @@ public class Driver {
     }
 
     private static void solve_lu_b() throws java.io.IOException  {
-        System.out.print("Input matrix A filename: ");
+        System.out.print("Input augmented matrix [A|b] filename: ");
         FileParser aFile = new FileParser(in.nextLine());
-        Matrix a = aFile.getMatrix();
-        System.out.print("Input vector b filename: ");
-        FileParser bFile = new FileParser(in.nextLine());
-        Vector b = bFile.getVector();
+        Object[] input = aFile.getAugmentedMatrix();
+        Matrix a = (Matrix) input[0];
+        Vector b = (Vector) input[1];
         System.out.println("A:\n" + a);
         System.out.println("b:\n" + b);
         System.out.println("LU Factorization");
@@ -105,12 +104,11 @@ public class Driver {
     }
 
     private static void solve_qr_b() throws java.io.IOException  {
-        System.out.print("Input matrix A filename: ");
+        System.out.print("Input augmented matrix [A|b] filename: ");
         FileParser aFile = new FileParser(in.nextLine());
-        Matrix a = aFile.getMatrix();
-        System.out.print("Input vector b filename: ");
-        FileParser bFile = new FileParser(in.nextLine());
-        Vector b = bFile.getVector();
+        Object[] input = aFile.getAugmentedMatrix();
+        Matrix a = (Matrix) input[0];
+        Vector b = (Vector) input[1];
         System.out.println("A:\n" + a);
         System.out.println("b:\n" + b);
         System.out.println("QR Factorization with Householder reflections:");
