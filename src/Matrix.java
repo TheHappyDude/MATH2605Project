@@ -46,7 +46,6 @@ public class Matrix {
         return new Matrix[]{lower, upper};
     }
 
-
     public Matrix[] QRFactorizeHH() {
         Matrix q = Matrix.genIdentityMatrix(matrix.length);
         Matrix r = new Matrix(matrix);
@@ -303,7 +302,20 @@ public class Matrix {
         for (double[] row : matrix) {
             out += "[ ";
             for (double elem : row) {
-                out += " " + elem + " ";
+                out += " " + String.format("%9f", elem) + " ";
+            }
+            out +="]\n";
+        }
+        return out;
+    }
+
+    public String toStringFull() {
+        String out = "";
+        for (double[] row : matrix) {
+            out += "[ ";
+            for (double elem : row) {
+                String num = "" + elem;
+                out += " " + String.format("%21s", num) + " ";
             }
             out +="]\n";
         }
@@ -320,5 +332,23 @@ public class Matrix {
             }
         }
         return max;
+    }
+
+    public static Matrix genHilbertMatrix(int size) {
+        double[][] hilbert = new double[size][size];
+        for (int i = 0; i < hilbert.length; i++) {
+            for (int j = 0; j < hilbert[i].length; j++) {
+                hilbert[i][j] = 1.0 / (i + j + 1);
+            }
+        }
+        return new Matrix(hilbert);
+    }
+
+    public int getNumCols() {
+        return numCols;
+    }
+
+    public int getNumRows() {
+        return numRows;
     }
 }

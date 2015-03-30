@@ -1,3 +1,6 @@
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 // Vector.java
 // Version 1.0
 
@@ -60,8 +63,18 @@ public class Vector {
 
     public String toString() {
         String out = "";
+        BigDecimal bd;
         for (double elem : vector) {
-            out += "[ " + elem + " ]\n";
+            out += "[ " + String.format("%9f", elem) + " ]\n";
+        }
+        return out;
+    }
+
+    public String toStringFull() {
+        String out = "";
+        for (double elem : vector) {
+            String num = "" + elem;
+            out += "[ " + String.format("%21s", num) + " ]\n";
         }
         return out;
     }
@@ -74,5 +87,13 @@ public class Vector {
             }
         }
         return max;
+    }
+
+    public static Vector genHilbertB(int size) {
+        double[] b = new double[size];
+        for (int i = 0; i < size; i++) {
+            b[i] = Math.pow(0.1, size / 3.0);
+        }
+        return new Vector(b);
     }
 }
