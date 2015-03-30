@@ -1,10 +1,9 @@
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
+ * Base driver to run everything.
  * Created by ojan on 3/28/15.
  */
 public class Driver {
@@ -40,6 +39,10 @@ public class Driver {
             solve_hilbert();
         } else if (command.equals("power_method")) {
             power_method();
+        } else if (command.equals("jacobi")) {
+            jacobi();
+        } else if (command.equals("gauss_seidel")) {
+            gauss_seidel();
         }
     }
 
@@ -311,6 +314,20 @@ public class Driver {
         System.out.println("Output written to hilbert.txt with full double precision");
     }
 
+    //PART II
+    private static void jacobi() throws java.io.IOException {
+        System.out.println("Input stream filename: ");
+        FileParser aFile = new FileParser(in.nextLine());
+        Vector stream = aFile.getVector();
+        System.out.println("Stream: " + stream);
+        Vector encodedStream = LinearAlgebra.encodeConvoluted(stream);
+        System.out.println("Encoded stream: \n" + encodedStream);
+    }
+
+    private static  void gauss_seidel() {
+
+    }
+
     //PART III
     private static void power_method() throws java.io.IOException {
         //Inputs
@@ -347,14 +364,5 @@ public class Driver {
             System.out.println("Method does not converge after 100 iterations");
         }
 
-    }
-
-    private static void jacobi() throws java.io.IOException {
-        System.out.println("Input stream filename: ");
-        FileParser aFile = new FileParser(in.nextLine());
-        Vector stream = aFile.getVector();
-        System.out.println("Stream: " + stream);
-        Vector encodedStream = LinearAlgebra.encodeConvoluted(stream);
-        System.out.println("Encoded stream: " + encodedStream);
     }
 }
