@@ -378,9 +378,25 @@ public class Driver {
         System.out.println("Input encoded stream filename: ");
         FileParser aFile = new FileParser(in.nextLine());
         Vector encoded = aFile.getVector();
-        System.out.println("Encoded word: " + encoded);
-        System.out.println("Decoding with Gauss-Seidel iterative method: ");
-        Object[] solutions = LinearAlgebra.decodeConvoluted(encoded);
+        System.out.println("Encoded word: \n" + encoded);
+        System.out.println("Decoding with Jacobi and Gauss-Seidel iterative methods: \n");
+        Object[][] solutions = LinearAlgebra.decodeConvoluted(encoded);
+        System.out.print("Iterations required to reach tolerance using Jacobi and y0: ");
+        System.out.println(solutions[0][1]);
+        System.out.println("Initial stream x using the Jacobi method and y0 for solving: ");
+        System.out.println(solutions[0][0]);
+        System.out.print("Iterations required to reach tolerance using Jacobi and y1: ");
+        System.out.println(solutions[1][1]);
+        System.out.println("Initial stream x using the Jacobi method and y1 for solving: ");
+        System.out.println(solutions[1][0]);
+        System.out.print("Iterations required to reach tolerance using Gauss-Seidel and y0: ");
+        System.out.println(solutions[2][1]);
+        System.out.println("Initial stream x using the Gauss-Seidel method and y0 for solving: ");
+        System.out.println(solutions[2][0]);
+        System.out.print("Iterations required to reach tolerance using Gauss-Seidel and y1: ");
+        System.out.println(solutions[3][1]);
+        System.out.println("Initial stream x using the Gauss-Seidel method and y1 for solving: ");
+        System.out.println(solutions[3][0]);
     }
 
     //PART III

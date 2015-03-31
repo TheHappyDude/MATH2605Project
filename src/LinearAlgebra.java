@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public final class LinearAlgebra {
     public static double dot(Vector v1,Vector v2) {
         if (v1.getSize() != v2.getSize()) {
@@ -203,7 +205,7 @@ public final class LinearAlgebra {
 
     public static Vector encodeConvoluted(Vector stream) {
         double[][] m = new double[stream.getSize()][stream.getSize()];
-        //build matrices a1, a2 for finding y1 and y2
+        //build matrices a0, a1 for finding y1 and y2
         for (int i = 0; i < m.length; i++) {
             for (int j = 0; j < m.length; j++) {
                 if (j == i || j == i - 2 || j == i - 3) {
@@ -231,7 +233,7 @@ public final class LinearAlgebra {
         return LinearAlgebra.add(y0.scale(10), y1);
     }
 
-    public static Object[] decodeConvoluted(Vector encoded) {
+    public static Object[][] decodeConvoluted(Vector encoded) {
         //deconstruct encoded vector into y1 and y0
         double[] y0arr = new double[encoded.getSize()];
         double[] y1arr = new double[encoded.getSize()];
@@ -242,14 +244,46 @@ public final class LinearAlgebra {
         }
         Vector y0 = new Vector(y0arr);
         Vector y1 = new Vector(y1arr);
+        //build matrices a0, a1 for finding x, the original stream
+        double[][] m = new double[encoded.getSize()][encoded.getSize()];
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m.length; j++) {
+                if (j == i || j == i - 2 || j == i - 3) {
+                    m[i][j] = 1;
+                } else {
+                    m[i][j] = 0;
+                }
+            }
+        }
+        Matrix a0 = new Matrix(m);
+        double[][] n = new double[encoded.getSize()][encoded.getSize()];
+        for (int i = 0; i < n.length; i++) {
+            for (int j = 0; j < n.length; j++) {
+                if (j == i || j == i - 1 || j == i - 3) {
+                    n[i][j] = 1;
+                } else {
+                    n[i][j] = 0;
+                }
+            }
+        }
+        Matrix a1 = new Matrix(n);
+        //build random initial guess vector x0
+        System.out.println(a0 + "\n" + a1);
+        Random rand = new Random();
+        double[] x0arr = new double[encoded.getSize()];
+        for (double d : x0arr) {
+            d = (double) rand.nextInt(2);
+        }
+        Vector x0 = new Vector(x0arr);
 
         //solve for jacobi
-        //use 10^-8 for tol, dont forget to report iterations needed
-        Object[] j = solveWithJacobi(null, null, null, Math.pow(10, -8));
+        Object[] j0 = solveWithJacobi(a0, y0, x0, Math.pow(10, -8));
+        Object[] j1 = solveWithJacobi(a1, y1, x0, Math.pow(10, -8));
 
         //solve for gauss-seidel
-        Object[] gs = solveWithGaussSeidel(null, null, null, Math.pow(10, -8));
+        Object[] gs0 = solveWithGaussSeidel(a0, y0, x0, Math.pow(10, -8));
+        Object[] gs1 = solveWithGaussSeidel(a1, y1, x0, Math.pow(10, -8));
 
-        return new Object[] {j, gs};
+        return new Object[][] {j0, j1, gs0, gs1};
     }
 }
