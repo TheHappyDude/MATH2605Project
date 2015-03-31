@@ -320,6 +320,7 @@ public class Driver {
         System.out.print("Input error tolerance: ");
         Double tol;
         tol = in.nextDouble();
+        in.nextLine();
         System.out.print("Input initial approximation vector filename: ");
         FileParser uoFile = new FileParser(in.nextLine());
         Vector uo = uoFile.getVector();
@@ -330,21 +331,21 @@ public class Driver {
         Vector eigenvector = uo;
         int numIterations = 0;
 
-        while (Math.abs(eigenvalue - oldValue) > tol && numIterations < 100) {
-            oldValue = eigenvalue;
+        while (Math.abs(eigenvector.get(0) - oldValue) > tol && numIterations < 10000) {
+            oldValue = eigenvector.get(0);
             eigenvector = LinearAlgebra.multMatrixVector(a, eigenvector);
-            eigenvector.scale(1 / eigenvector.getNorm());
+            eigenvector = eigenvector.scale(1 / eigenvector.getNorm());
             eigenvalue = eigenvector.getNorm();
             numIterations++;
         }
 
         //Output
-        if (numIterations < 100) {
-            System.out.println("Approximated eigenvalue: " + eigenvalue + "\n");
-            System.out.println("Approximated eigenvector: " + eigenvector.toString() + "\n");
+        if (numIterations < 10000) {
+            System.out.print("Approximated eigenvalue: " + eigenvalue + "\n");
+            System.out.print("Approximated eigenvector: \n" + eigenvector.toString() + "\n");
             System.out.println("Number of iterations: " + numIterations);
         } else {
-            System.out.println("Method does not converge after 100 iterations");
+            System.out.println("Method does not converge after 10,000 iterations");
         }
 
     }
