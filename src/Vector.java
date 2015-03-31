@@ -1,5 +1,4 @@
 import java.math.BigDecimal;
-import java.math.MathContext;
 
 // Vector.java
 // Version 1.0
@@ -63,7 +62,6 @@ public class Vector {
 
     public String toString() {
         String out = "";
-        BigDecimal bd;
         for (double elem : vector) {
             out += "[ " + String.format("%9f", elem) + " ]\n";
         }

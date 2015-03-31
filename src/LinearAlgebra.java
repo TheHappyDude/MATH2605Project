@@ -132,4 +132,102 @@ public final class LinearAlgebra {
         }
         return new Vector(x);
     }
+
+    public static Object[] solveWithJacobi(Matrix a, Vector y, Vector x0, double tol) {
+        final int MAX_ITERATIONS = 100000;
+        Vector xPrev = x0;
+        Vector x;
+        int iterations = 0;
+
+        do {
+            double[] xArr = new double[xPrev.getSize()];
+            for (int i = 0; i < xArr.length; i++) {
+                for (int j = 0; j < a.getSize()[1]; j++) {
+                    if (i != j) {
+                        xArr[i] += a.get(i,j) * xPrev.get(j);
+                    }
+                }
+                xArr[i] = -1* xArr[i] / a.get(i,i) + y.get(i);
+            }
+            x = new Vector(xArr);
+            iterations++;
+            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() > tol) {
+                return new Object[]{x, 0};
+            }
+        } while (iterations < MAX_ITERATIONS);
+        return null;
+    }
+
+    public static Object[] solveWithGaussSeidel(Matrix a, Vector y, Vector x0, double tol) {
+        final int MAX_ITERATIONS = 100000;
+        Vector xPrev = x0;
+        Vector x;
+        int iterations = 0;
+
+        do {
+            double[] xArr = new double[xPrev.getSize()];
+            for (int i = 0; i < xArr.length; i++) {
+                for (int j = 0; j < a.getSize()[1]; j++) {
+                    if (j < i) {
+                        xArr[i] += a.get(i,j) * xPrev.get(j);
+                    } else if (j > i) {
+                        xArr[i] += a.get(i,j) * xArr[j];
+                    }
+                }
+                xArr[i] = -1* xArr[i] / a.get(i,i) + y.get(i);
+            }
+            x = new Vector(xArr);
+            iterations++;
+            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() > tol) {
+                return new Object[]{x, 0};
+            }
+            xPrev = x;
+        } while (iterations < MAX_ITERATIONS);
+        return null;
+    }
+
+    public static Vector modulo2multMatrixVector(Matrix m, Vector v) {
+        if (m.getSize()[1] != v.getSize()) {
+            throw new IllegalArgumentException("Matrix and Vector must be of valid size");
+        }
+
+        double[] product = new double[m.getSize()[0]];
+        for (int i = 0; i < m.getSize()[0]; i++) {
+            for (int j = 0; j < m.getSize()[1]; j++) {
+                product[i] += m.get(i,j) * v.get(j);
+            }
+            product[i] = product[i] % 2;
+        }
+        return new Vector(product);
+    }
+
+    public static Vector encodeConvoluted(Vector stream) {
+        double[][] m = new double[stream.getSize()][stream.getSize()];
+        //build matrices a1, a2 for finding y1 and y2
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m.length; j++) {
+                if (j == i || j == i - 2 || j == i - 3) {
+                    m[i][j] = 1;
+                } else {
+                    m[i][j] = 0;
+                }
+            }
+        }
+        Matrix a0 = new Matrix(m);
+        double[][] n = new double[stream.getSize()][stream.getSize()];
+        for (int i = 0; i < n.length; i++) {
+            for (int j = 0; j < n.length; j++) {
+                if (j == i || j == i - 1 || j == i - 3) {
+                    n[i][j] = 1;
+                } else {
+                    n[i][j] = 0;
+                }
+            }
+        }
+        Matrix a1 = new Matrix(n);
+
+        Vector y0 = modulo2multMatrixVector(a0, stream);
+        Vector y1 = modulo2multMatrixVector(a1, stream);
+        return LinearAlgebra.add(y0.scale(10), y1);
+    }
 }

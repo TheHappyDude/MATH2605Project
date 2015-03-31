@@ -1,10 +1,10 @@
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
+ * Base driver to run everything.
  * Created by ojan on 3/28/15.
  */
 public class Driver {
@@ -40,6 +40,10 @@ public class Driver {
             solve_hilbert();
         } else if (command.equals("power_method")) {
             power_method();
+        } else if (command.equals("jacobi")) {
+            jacobi();
+        } else if (command.equals("gauss_seidel")) {
+            gauss_seidel();
         }
     }
 
@@ -83,12 +87,11 @@ public class Driver {
     }
 
     private static void solve_lu_b() throws java.io.IOException  {
-        System.out.print("Input matrix A filename: ");
+        System.out.print("Input augmented matrix [A|b] filename: ");
         FileParser aFile = new FileParser(in.nextLine());
-        Matrix a = aFile.getMatrix();
-        System.out.print("Input vector b filename: ");
-        FileParser bFile = new FileParser(in.nextLine());
-        Vector b = bFile.getVector();
+        Object[] input = aFile.getAugmentedMatrix();
+        Matrix a = (Matrix) input[0];
+        Vector b = (Vector) input[1];
         System.out.println("A:\n" + a);
         System.out.println("b:\n" + b);
         System.out.println("LU Factorization");
@@ -105,12 +108,11 @@ public class Driver {
     }
 
     private static void solve_qr_b() throws java.io.IOException  {
-        System.out.print("Input matrix A filename: ");
+        System.out.print("Input augmented matrix [A|b] filename: ");
         FileParser aFile = new FileParser(in.nextLine());
-        Matrix a = aFile.getMatrix();
-        System.out.print("Input vector b filename: ");
-        FileParser bFile = new FileParser(in.nextLine());
-        Vector b = bFile.getVector();
+        Object[] input = aFile.getAugmentedMatrix();
+        Matrix a = (Matrix) input[0];
+        Vector b = (Vector) input[1];
         System.out.println("A:\n" + a);
         System.out.println("b:\n" + b);
         System.out.println("QR Factorization with Householder reflections:");
@@ -309,6 +311,34 @@ public class Driver {
 
         writer.close();
         System.out.println("Output written to hilbert.txt with full double precision");
+    }
+
+    //PART II
+    private static void jacobi() throws java.io.IOException {
+        System.out.println("Input stream filename: ");
+        FileParser aFile = new FileParser(in.nextLine());
+        Vector stream = aFile.getVector();
+        System.out.println("Stream: " + stream);
+        Vector encodedStream = LinearAlgebra.encodeConvoluted(stream);
+        System.out.println("Encoded stream: \n" + encodedStream);
+    }
+
+    private static  void gauss_seidel() {
+
+    }
+
+    private static void encode_random_stream() {
+        System.out.print("Input stream length: ");
+        int n = Integer.parseInt(in.nextLine());
+        Random rand = new Random();
+        double[] xArr = new double[n];
+        for (int i = 0; i < n; i++) {
+            xArr[i] = rand.nextInt(2);
+        }
+        Vector x = new Vector(xArr);
+        System.out.println("x:\n" + x);
+        Vector encodedStream = LinearAlgebra.encodeConvoluted(x);
+        System.out.println("Encoded stream: \n" + encodedStream);
     }
 
     //PART III

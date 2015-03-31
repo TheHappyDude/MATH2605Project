@@ -50,4 +50,27 @@ public class FileParser {
         }
         return new Vector(vectordouble);
     }
+
+    public Object[] getAugmentedMatrix() throws java.io.IOException {
+        double[][] matrix;
+        double[] vector;
+        in.mark(500000);
+        String nextLine = in.readLine();
+        StringTokenizer tokens = new StringTokenizer(nextLine);
+        int size = tokens.countTokens();
+        in.reset();
+        matrix = new double[size - 1][size - 1];
+        vector = new double[size - 1];
+        for (int i = 0; i < matrix.length; i++) {
+            tokens = new StringTokenizer(in.readLine());
+            for (int j = 0; j < matrix[0].length + 1; j++) {
+                if (j < size - 1) {
+                    matrix[i][j] = Double.parseDouble(tokens.nextToken());
+                } else {
+                    vector[i] = Double.parseDouble(tokens.nextToken());
+                }
+            }
+        }
+        return new Object[]{new Matrix(matrix), new Vector(vector)};
+    }
 }
