@@ -338,7 +338,11 @@ public class Driver {
         System.out.println("Input tolerance: " + tol);
         System.out.println("Solving with Jacobi iterative method:");
         Object[] result = LinearAlgebra.solveWithJacobi(a, b, x0, tol);
-        System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]); //TODO fix jacobi solver
+        if (result[0] != null) {
+            System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]); //TODO fix jacobi solver
+        } else {
+            System.out.println("System did not converge after " + result[1] + " iterations.");
+        }
     }
 
     private static  void gauss_seidel() throws java.io.IOException {

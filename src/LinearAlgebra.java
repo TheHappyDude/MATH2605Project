@@ -153,11 +153,12 @@ public final class LinearAlgebra {
             }
             x = new Vector(xArr);
             iterations++;
-            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() > tol) {
+            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() < tol) {
                 return new Object[]{x, iterations};
             }
+            xPrev = x;
         } while (iterations < MAX_ITERATIONS);
-        return null;
+        return new Object[] {null, iterations};
     }
 
     public static Object[] solveWithGaussSeidel(Matrix a, Vector y, Vector x0, double tol) {
@@ -180,12 +181,12 @@ public final class LinearAlgebra {
             }
             x = new Vector(xArr);
             iterations++;
-            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() > tol) {
+            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() < tol) {
                 return new Object[]{x, iterations};
             }
             xPrev = x;
         } while (iterations < MAX_ITERATIONS);
-        return null;
+        return new Object[] {null, iterations};
     }
 
     public static Vector modulo2multMatrixVector(Matrix m, Vector v) {
@@ -203,7 +204,18 @@ public final class LinearAlgebra {
         return new Vector(product);
     }
 
-    public static Vector encodeConvoluted(Vector stream) {
+    public static Vector encodeConvoluted(Vector v) {
+        //adding 3 zeros to the end of the stream
+        double[] arr = new double[v.getSize() + 3];
+        for (int i = 0; i < arr.length; i++) {
+            if (i < v.getSize()) {
+                arr[i] = v.get(i);
+            } else {
+                arr[i] = 0;
+            }
+        }
+        Vector stream = new Vector(arr);
+
         double[][] m = new double[stream.getSize()][stream.getSize()];
         //build matrices a0, a1 for finding y1 and y2
         for (int i = 0; i < m.length; i++) {
