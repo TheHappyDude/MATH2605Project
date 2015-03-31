@@ -144,12 +144,13 @@ public final class LinearAlgebra {
         do {
             double[] xArr = new double[xPrev.getSize()];
             for (int i = 0; i < xArr.length; i++) {
-                for (int j = 0; j < a.getSize()[1]; j++) {
+                double sum = 0;
+                for (int j = 0; j < xArr.length; j++) {
                     if (i != j) {
-                        xArr[i] += a.get(i,j) * xPrev.get(j);
+                        sum += a.get(i,j) * xPrev.get(j);
                     }
                 }
-                xArr[i] = -1* xArr[i] / a.get(i,i) + y.get(i);
+                xArr[i] = (y.get(i) - sum) / a.get(i,i);
             }
             x = new Vector(xArr);
             iterations++;
@@ -171,13 +172,13 @@ public final class LinearAlgebra {
             double[] xArr = new double[xPrev.getSize()];
             for (int i = 0; i < xArr.length; i++) {
                 for (int j = 0; j < a.getSize()[1]; j++) {
-                    if (j < i) {
+                    if (j > i) {
                         xArr[i] += a.get(i,j) * xPrev.get(j);
-                    } else if (j > i) {
+                    } else if (j < i) {
                         xArr[i] += a.get(i,j) * xArr[j];
                     }
                 }
-                xArr[i] = -1* xArr[i] / a.get(i,i) + y.get(i);
+                xArr[i] = (-1* xArr[i] + y.get(i)) / a.get(i,i);
             }
             x = new Vector(xArr);
             iterations++;
