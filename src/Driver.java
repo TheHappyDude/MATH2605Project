@@ -48,6 +48,8 @@ public class Driver {
             encode_random_stream();
         } else if (command.equals("decode_stream")) {
             decode_stream();
+        } else if (command.equals("encode_stream")) {
+            encode_stream();
         }
     }
 
@@ -358,6 +360,15 @@ public class Driver {
         System.out.println("Solving with Gauss-Seidel iterative method:");
         Object[] result = LinearAlgebra.solveWithGaussSeidel(a, b, x0, tol);
         System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]); //TODO Fix gauss-seidel solver
+    }
+
+    private static void encode_stream() throws java.io.IOException {
+        System.out.println("Input stream filename: ");
+        FileParser aFile = new FileParser(in.nextLine());
+        Vector stream = aFile.getVector();
+        System.out.println("Stream: \n" + stream);
+        Vector encodedStream = LinearAlgebra.encodeConvoluted(stream);
+        System.out.println("Encoded stream : \n" + encodedStream);
     }
 
     private static void encode_random_stream() {
