@@ -48,6 +48,8 @@ public class Driver {
             encode_random_stream();
         } else if (command.equals("decode_stream")) {
             decode_stream();
+        } else if (command.equals("encode_stream")) {
+            encode_stream();
         }
     }
 
