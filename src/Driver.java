@@ -13,7 +13,7 @@ public class Driver {
     public static void main(String[] args) {
         in = new Scanner(System.in);
         String command;
-        System.out.println("Type help for a list of commands");
+        System.out.println("Input a command (see readme.txt for help): ");
         do {
             System.out.print(">>> ");
             command = in.nextLine();
@@ -50,6 +50,8 @@ public class Driver {
             decode_stream();
         } else if (command.equals("encode_stream")) {
             encode_stream();
+        } else {
+            System.out.println("Invalid command!");
         }
     }
 
