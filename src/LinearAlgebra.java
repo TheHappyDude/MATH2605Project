@@ -152,7 +152,7 @@ public final class LinearAlgebra {
             x = new Vector(xArr);
             iterations++;
             if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() > tol) {
-                return new Object[]{x, 0};
+                return new Object[]{x, iterations};
             }
         } while (iterations < MAX_ITERATIONS);
         return null;
@@ -179,7 +179,7 @@ public final class LinearAlgebra {
             x = new Vector(xArr);
             iterations++;
             if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() > tol) {
-                return new Object[]{x, 0};
+                return new Object[]{x, iterations};
             }
             xPrev = x;
         } while (iterations < MAX_ITERATIONS);
@@ -229,5 +229,27 @@ public final class LinearAlgebra {
         Vector y0 = modulo2multMatrixVector(a0, stream);
         Vector y1 = modulo2multMatrixVector(a1, stream);
         return LinearAlgebra.add(y0.scale(10), y1);
+    }
+
+    public static Object[] decodeConvoluted(Vector encoded) {
+        //deconstruct encoded vector into y1 and y0
+        double[] y0arr = new double[encoded.getSize()];
+        double[] y1arr = new double[encoded.getSize()];
+        for (int i = 0; i < encoded.getSize(); i++) {
+            double num = encoded.get(i);
+            y0arr[i] = num / 10;
+            y1arr[i] = num % 10;
+        }
+        Vector y0 = new Vector(y0arr);
+        Vector y1 = new Vector(y1arr);
+
+        //solve for jacobi
+        //use 10^-8 for tol, dont forget to report iterations needed
+        Object[] j = solveWithJacobi(null, null, null, Math.pow(10, -8));
+
+        //solve for gauss-seidel
+        Object[] gs = solveWithGaussSeidel(null, null, null, Math.pow(10, -8));
+
+        return new Object[] {j, gs};
     }
 }

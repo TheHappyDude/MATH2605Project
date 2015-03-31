@@ -44,6 +44,10 @@ public class Driver {
             jacobi();
         } else if (command.equals("gauss_seidel")) {
             gauss_seidel();
+        } else if (command.equals("encode_random_stream")) {
+            encode_random_stream();
+        } else if (command.equals("decode_stream")) {
+            decode_stream();
         }
     }
 
@@ -315,16 +319,45 @@ public class Driver {
 
     //PART II
     private static void jacobi() throws java.io.IOException {
-        System.out.println("Input stream filename: ");
+        System.out.println("Input augmented matrix [A|b] filename: ");
         FileParser aFile = new FileParser(in.nextLine());
-        Vector stream = aFile.getVector();
-        System.out.println("Stream: " + stream);
-        Vector encodedStream = LinearAlgebra.encodeConvoluted(stream);
-        System.out.println("Encoded stream: \n" + encodedStream);
+        Object[] input = aFile.getAugmentedMatrix();
+        Matrix a = (Matrix) input[0];
+        Vector b = (Vector) input[1];
+        System.out.println("A: \n" + a);
+        System.out.println("b: \n" + b);
+        System.out.println("Input initial guess vector x0 filename: ");
+        FileParser bFile = new FileParser(in.nextLine());
+        Vector x0 = bFile.getVector();
+        System.out.println("x0: \n" + x0);
+        System.out.println("Input tolerance value: ");
+        Scanner keyboard = new Scanner(System.in);
+        double tol = keyboard.nextDouble();
+        System.out.println("Input tolerance: " + tol);
+        System.out.println("Solving with Jacobi iterative method:");
+        Object[] result = LinearAlgebra.solveWithJacobi(a, b, x0, tol);
+        System.out.println(result); //TODO fix jacobi solver
     }
 
-    private static  void gauss_seidel() {
-
+    private static  void gauss_seidel() throws java.io.IOException {
+        System.out.println("Input augmented matrix [A|b] filename: ");
+        FileParser aFile = new FileParser(in.nextLine());
+        Object[] input = aFile.getAugmentedMatrix();
+        Matrix a = (Matrix) input[0];
+        Vector b = (Vector) input[1];
+        System.out.println("A: \n" + a);
+        System.out.println("b: \n" + b);
+        System.out.println("Input initial guess vector x0 filename: ");
+        FileParser bFile = new FileParser(in.nextLine());
+        Vector x0 = bFile.getVector();
+        System.out.println("x0: \n" + x0);
+        System.out.println("Input tolerance value: ");
+        Scanner keyboard = new Scanner(System.in);
+        double tol = keyboard.nextDouble();
+        System.out.println("Input tolerance: " + tol);
+        System.out.println("Solving with Gauss-Seidel iterative method:");
+        Object[] result = LinearAlgebra.solveWithGaussSeidel(a, b, x0, tol);
+        System.out.println(result[0]); //TODO Fix gauss-seidel solver
     }
 
     private static void encode_random_stream() {
@@ -339,6 +372,15 @@ public class Driver {
         System.out.println("x:\n" + x);
         Vector encodedStream = LinearAlgebra.encodeConvoluted(x);
         System.out.println("Encoded stream: \n" + encodedStream);
+    }
+
+    private static void decode_stream() throws  java.io.IOException {
+        System.out.println("Input encoded stream filename: ");
+        FileParser aFile = new FileParser(in.nextLine());
+        Vector encoded = aFile.getVector();
+        System.out.println("Encoded word: " + encoded);
+        System.out.println("Decoding with Gauss-Seidel iterative method: ");
+        Object[] solutions = LinearAlgebra.decodeConvoluted(encoded);
     }
 
     //PART III
