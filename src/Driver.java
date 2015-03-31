@@ -360,6 +360,15 @@ public class Driver {
         System.out.println(result[0]); //TODO Fix gauss-seidel solver
     }
 
+    private static void encode_stream() throws java.io.IOException {
+        System.out.println("Input stream filename: ");
+        FileParser aFile = new FileParser(in.nextLine());
+        Vector stream = aFile.getVector();
+        System.out.println("Stream: \n" + stream);
+        Vector encodedStream = LinearAlgebra.encodeConvoluted(stream);
+        System.out.println("Encoded stream : \n" + encodedStream);
+    }
+
     private static void encode_random_stream() {
         System.out.print("Input stream length: ");
         int n = Integer.parseInt(in.nextLine());

@@ -268,7 +268,7 @@ public final class LinearAlgebra {
         }
         Matrix a1 = new Matrix(n);
         //build random initial guess vector x0
-        System.out.println(a0 + "\n" + a1);
+        System.out.println(a0 + "\n" + a1); //TODO get rid of this later
         Random rand = new Random();
         double[] x0arr = new double[encoded.getSize()];
         for (double d : x0arr) {
