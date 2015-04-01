@@ -341,7 +341,7 @@ public class Driver {
         System.out.println("Solving with Jacobi iterative method:");
         Object[] result = LinearAlgebra.solveWithJacobi(a, b, x0, tol);
         if (result[0] != null) {
-            System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]); //TODO fix jacobi solver
+            System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]);
         } else {
             System.out.println("System did not converge after " + result[1] + " iterations.");
         }
@@ -365,7 +365,7 @@ public class Driver {
         System.out.println("Input tolerance: " + tol);
         System.out.println("Solving with Gauss-Seidel iterative method:");
         Object[] result = LinearAlgebra.solveWithGaussSeidel(a, b, x0, tol);
-        System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]); //TODO Fix gauss-seidel solver
+        System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]);
     }
 
     private static void encode_stream() throws java.io.IOException {
