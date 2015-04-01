@@ -94,4 +94,20 @@ public class Vector {
         }
         return new Vector(b);
     }
+
+    public String toStringBitStream() {
+        String out = "[";
+        for (int i = 0; i < vector.length; i++) {
+            out += " " + (int) vector[i] + " ";
+        }
+        return out + "]";
+    }
+
+    public String toStringEncodedStream() {
+        String out = "[";
+        for (int i = 0; i < vector.length; i++) {
+            out += " " + String.format("%02d", (int) vector[i]) + " ";
+        }
+        return out + "]";
+    }
 }

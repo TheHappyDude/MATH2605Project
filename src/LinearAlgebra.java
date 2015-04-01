@@ -339,8 +339,8 @@ public final class LinearAlgebra {
         //build random initial guess vector x0
         Random rand = new Random();
         double[] x0arr = new double[encoded.getSize()];
-        for (double d : x0arr) {
-            d = (double) rand.nextInt(2);
+        for (int i = 0; i < x0arr.length; i++) {
+            x0arr[i] = (double) rand.nextInt(2);
         }
         Vector x0 = new Vector(x0arr);
 

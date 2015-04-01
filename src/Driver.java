@@ -50,7 +50,9 @@ public class Driver {
             decode_stream();
         } else if (command.equals("encode_stream")) {
             encode_stream();
-        } else {
+        } else if (command.equals("encode_decode_random_stream")) {
+            encode_decode_random_stream();
+        } else if (!command.equals("exit")) {
             System.out.println("Invalid command!");
         }
     }
@@ -365,16 +367,20 @@ public class Driver {
         System.out.println("Input tolerance: " + tol);
         System.out.println("Solving with Gauss-Seidel iterative method:");
         Object[] result = LinearAlgebra.solveWithGaussSeidel(a, b, x0, tol);
-        System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]);
+        if (result[0] != null) {
+            System.out.println("x:\n" + result[0] + "\nIterations: " + result[1]);
+        } else {
+            System.out.println("System did not converge after " + result[1] + " iterations.");
+        }
     }
 
     private static void encode_stream() throws java.io.IOException {
-        System.out.println("Input stream filename: ");
+        System.out.println("Input stream (row vector) filename: ");
         FileParser aFile = new FileParser(in.nextLine());
-        Vector stream = aFile.getVector();
-        System.out.println("Stream: \n" + stream);
+        Vector stream = aFile.getRowVector();
+        System.out.println("Stream: \n" + stream.toStringBitStream());
         Vector encodedStream = LinearAlgebra.encodeConvoluted(stream);
-        System.out.println("Encoded stream : \n" + encodedStream);
+        System.out.println("Encoded stream : \n" + encodedStream.toStringEncodedStream());
     }
 
     private static void encode_random_stream() {
@@ -386,34 +392,114 @@ public class Driver {
             xArr[i] = rand.nextInt(2);
         }
         Vector x = new Vector(xArr);
-        System.out.println("x:\n" + x);
+        System.out.println("x:\n" + x.toStringBitStream());
         Vector encodedStream = LinearAlgebra.encodeConvoluted(x);
-        System.out.println("Encoded stream: \n" + encodedStream);
+        System.out.println("Encoded stream: \n" + encodedStream.toStringEncodedStream());
     }
 
     private static void decode_stream() throws  java.io.IOException {
-        System.out.println("Input encoded stream filename: ");
+        System.out.println("Input encoded stream (row vector) filename: ");
         FileParser aFile = new FileParser(in.nextLine());
-        Vector encoded = aFile.getVector();
-        System.out.println("Encoded word: \n" + encoded);
+        Vector encoded = aFile.getRowVector();
+        System.out.println("Encoded word: \n" + encoded.toStringEncodedStream());
         System.out.println("Decoding with Jacobi and Gauss-Seidel iterative methods: \n");
         Object[][] solutions = LinearAlgebra.decodeConvoluted(encoded);
-        System.out.print("Iterations required to reach tolerance using Jacobi and y0: ");
-        System.out.println((int) solutions[0][1]);
-        System.out.println("Initial stream x using the Jacobi method and y0 for solving: ");
-        System.out.println((Vector) solutions[0][0]);
-        System.out.print("Iterations required to reach tolerance using Jacobi and y1: ");
-        System.out.println((int) solutions[1][1]);
-        System.out.println("Initial stream x using the Jacobi method and y1 for solving: ");
-        System.out.println((Vector) solutions[1][0]);
-        System.out.print("Iterations required to reach tolerance using Gauss-Seidel and y0: ");
-        System.out.println((int) solutions[2][1]);
-        System.out.println("Initial stream x using the Gauss-Seidel method and y0 for solving: ");
-        System.out.println((Vector) solutions[2][0]);
-        System.out.print("Iterations required to reach tolerance using Gauss-Seidel and y1: ");
-        System.out.println((int) solutions[3][1]);
-        System.out.println("Initial stream x using the Gauss-Seidel method and y1 for solving: ");
-        System.out.println((Vector) solutions[3][0]);
+        if (solutions[0][0] != null) {
+            System.out.print("Iterations required to reach tolerance using Jacobi and y0: ");
+
+            System.out.println((int) solutions[0][1]);
+            System.out.println("Initial stream x using the Jacobi method and y0 for solving: ");
+            System.out.println(((Vector) solutions[0][0]).toStringBitStream());
+        } else {
+            System.out.println("The Jacobi method did not converge to x using y0 after "
+                    + solutions[0][1] + " iterations.");
+        }
+        if (solutions[1][0] != null) {
+            System.out.print("Iterations required to reach tolerance using Jacobi and y1: ");
+            System.out.println((int) solutions[1][1]);
+            System.out.println("Initial stream x using the Jacobi method and y1 for solving: ");
+            System.out.println(((Vector) solutions[1][0]).toStringBitStream());
+        } else {
+            System.out.println("The Jacobi method did not converge to x using y1 after "
+                    + solutions[1][1] + " iterations.");
+        }
+        if (solutions[2][0] != null) {
+            System.out.print("Iterations required to reach tolerance using Gauss-Seidel and y0: ");
+
+            System.out.println((int) solutions[2][1]);
+            System.out.println("Initial stream x using the Gauss-Seidel method and y0 for solving: ");
+            System.out.println(((Vector) solutions[2][0]).toStringBitStream());
+        } else {
+            System.out.println("The Gauss-Seidel method did not converge to x using y0 after "
+                    + solutions[2][1] + " iterations.");
+        }
+        if (solutions[3][0] != null) {
+            System.out.print("Iterations required to reach tolerance using Gauss-Seidel and y1: ");
+
+            System.out.println((int) solutions[3][1]);
+            System.out.println("Initial stream x using the Gauss-Seidel method and y1 for solving: ");
+            System.out.println(((Vector) solutions[3][0]).toStringBitStream());
+        } else {
+            System.out.println("The Gauss-Seidel method did not converge to x using y1 after "
+                    + solutions[3][1] + " iterations.");
+        }
+    }
+
+    private static void encode_decode_random_stream() throws java.io.IOException {
+        System.out.print("Input stream length: ");
+        int n = Integer.parseInt(in.nextLine());
+        Random rand = new Random();
+        double[] xArr = new double[n];
+        for (int i = 0; i < n; i++) {
+            xArr[i] = rand.nextInt(2);
+        }
+        Vector x = new Vector(xArr);
+        System.out.println("x:\n" + x.toStringBitStream());
+        Vector encodedStream = LinearAlgebra.encodeConvoluted(x);
+        System.out.println("Encoded stream: \n" + encodedStream.toStringEncodedStream());
+
+        Vector encoded = encodedStream;
+        System.out.println("\nDecoding with Jacobi and Gauss-Seidel iterative methods: \n");
+        Object[][] solutions = LinearAlgebra.decodeConvoluted(encoded);
+        if (solutions[0][0] != null) {
+            System.out.print("Iterations required to reach tolerance using Jacobi and y0: ");
+
+            System.out.println((int) solutions[0][1]);
+            System.out.println("Initial stream x using the Jacobi method and y0 for solving: ");
+            System.out.println(((Vector) solutions[0][0]).toStringBitStream());
+        } else {
+            System.out.println("The Jacobi method did not converge to x using y0 after "
+                    + solutions[0][1] + " iterations.");
+        }
+        if (solutions[1][0] != null) {
+            System.out.print("Iterations required to reach tolerance using Jacobi and y1: ");
+            System.out.println((int) solutions[1][1]);
+            System.out.println("Initial stream x using the Jacobi method and y1 for solving: ");
+            System.out.println(((Vector) solutions[1][0]).toStringBitStream());
+        } else {
+            System.out.println("The Jacobi method did not converge to x using y1 after "
+                    + solutions[1][1] + " iterations.");
+        }
+        if (solutions[2][0] != null) {
+            System.out.print("Iterations required to reach tolerance using Gauss-Seidel and y0: ");
+
+            System.out.println((int) solutions[2][1]);
+            System.out.println("Initial stream x using the Gauss-Seidel method and y0 for solving: ");
+            System.out.println(((Vector) solutions[2][0]).toStringBitStream());
+        } else {
+            System.out.println("The Gauss-Seidel method did not converge to x using y0 after "
+                    + solutions[2][1] + " iterations.");
+        }
+        if (solutions[3][0] != null) {
+            System.out.print("Iterations required to reach tolerance using Gauss-Seidel and y1: ");
+
+            System.out.println((int) solutions[3][1]);
+            System.out.println("Initial stream x using the Gauss-Seidel method and y1 for solving: ");
+            System.out.println(((Vector) solutions[3][0]).toStringBitStream());
+        } else {
+            System.out.println("The Gauss-Seidel method did not converge to x using y1 after " + solutions[3][1] + " iterations.");
+
+        }
     }
 
     //PART III

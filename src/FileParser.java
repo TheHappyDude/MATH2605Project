@@ -73,4 +73,13 @@ public class FileParser {
         }
         return new Object[]{new Matrix(matrix), new Vector(vector)};
     }
+
+    public Vector getRowVector() throws java.io.IOException {
+        StringTokenizer tokens = new StringTokenizer(in.readLine());
+        double[] vector = new double[tokens.countTokens()];
+        for (int i = 0; i < vector.length; i++) {
+            vector[i] = Double.parseDouble(tokens.nextToken());
+        }
+        return new Vector(vector);
+    }
 }
