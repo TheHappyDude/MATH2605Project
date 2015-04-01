@@ -190,6 +190,62 @@ public final class LinearAlgebra {
         return new Object[] {null, iterations};
     }
 
+    public static Object[] decodeWithJacobi(Matrix a, Vector y, Vector x0, double tol) {
+        final int MAX_ITERATIONS = 100000;
+        Vector xPrev = x0;
+        Vector x;
+        int iterations = 0;
+
+        do {
+            double[] xArr = new double[xPrev.getSize()];
+            for (int i = 0; i < xArr.length; i++) {
+                double sum = 0;
+                for (int j = 0; j < xArr.length; j++) {
+                    if (i != j) {
+                        sum += a.get(i,j) * xPrev.get(j);
+                    }
+                }
+                xArr[i] = Math.abs((y.get(i) - sum) / a.get(i,i)) % 2;
+            }
+            x = new Vector(xArr);
+            iterations++;
+            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() < tol) {
+                return new Object[]{x, iterations};
+            }
+            xPrev = x;
+        } while (iterations < MAX_ITERATIONS);
+        return new Object[] {null, iterations};
+    }
+
+
+    public static Object[] decodeWithGaussSeidel(Matrix a, Vector y, Vector x0, double tol) {
+        final int MAX_ITERATIONS = 100000;
+        Vector xPrev = x0;
+        Vector x;
+        int iterations = 0;
+
+        do {
+            double[] xArr = new double[xPrev.getSize()];
+            for (int i = 0; i < xArr.length; i++) {
+                for (int j = 0; j < a.getSize()[1]; j++) {
+                    if (j > i) {
+                        xArr[i] += a.get(i,j) * xPrev.get(j);
+                    } else if (j < i) {
+                        xArr[i] += a.get(i,j) * xArr[j];
+                    }
+                }
+                xArr[i] = Math.abs((-1* xArr[i] + y.get(i)) / a.get(i,i)) % 2;
+            }
+            x = new Vector(xArr);
+            iterations++;
+            if (LinearAlgebra.add(x, xPrev.scale(-1)).getNorm() < tol) {
+                return new Object[]{x, iterations};
+            }
+            xPrev = x;
+        } while (iterations < MAX_ITERATIONS);
+        return new Object[] {null, iterations};
+    }
+
     public static Vector modulo2multMatrixVector(Matrix m, Vector v) {
         if (m.getSize()[1] != v.getSize()) {
             throw new IllegalArgumentException("Matrix and Vector must be of valid size");
@@ -252,7 +308,7 @@ public final class LinearAlgebra {
         double[] y1arr = new double[encoded.getSize()];
         for (int i = 0; i < encoded.getSize(); i++) {
             double num = encoded.get(i);
-            y0arr[i] = num / 10;
+            y0arr[i] = (int) num / 10;
             y1arr[i] = num % 10;
         }
         Vector y0 = new Vector(y0arr);
@@ -281,7 +337,6 @@ public final class LinearAlgebra {
         }
         Matrix a1 = new Matrix(n);
         //build random initial guess vector x0
-        System.out.println(a0 + "\n" + a1); //TODO get rid of this later
         Random rand = new Random();
         double[] x0arr = new double[encoded.getSize()];
         for (double d : x0arr) {
@@ -290,12 +345,12 @@ public final class LinearAlgebra {
         Vector x0 = new Vector(x0arr);
 
         //solve for jacobi
-        Object[] j0 = solveWithJacobi(a0, y0, x0, Math.pow(10, -8));
-        Object[] j1 = solveWithJacobi(a1, y1, x0, Math.pow(10, -8));
+        Object[] j0 = decodeWithJacobi(a0, y0, x0, Math.pow(10, -8));
+        Object[] j1 = decodeWithJacobi(a1, y1, x0, Math.pow(10, -8));
 
         //solve for gauss-seidel
-        Object[] gs0 = solveWithGaussSeidel(a0, y0, x0, Math.pow(10, -8));
-        Object[] gs1 = solveWithGaussSeidel(a1, y1, x0, Math.pow(10, -8));
+        Object[] gs0 = decodeWithGaussSeidel(a0, y0, x0, Math.pow(10, -8));
+        Object[] gs1 = decodeWithGaussSeidel(a1, y1, x0, Math.pow(10, -8));
 
         return new Object[][] {j0, j1, gs0, gs1};
     }
