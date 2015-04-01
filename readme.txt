@@ -1,3 +1,12 @@
+To compile java source files:
+    open a terminal or command prompt
+    use cd to enter the directory containing the source files
+    type "javac *.java" (without the quotes)
+To run the program after compiling:
+    open a terminal or command prompt
+    use cd to enter the directory containing the compiled source files
+    type "java Driver" (without the quotes)
+
 COMMANDS
 
 lu_fact
